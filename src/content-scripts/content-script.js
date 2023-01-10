@@ -40,3 +40,22 @@ browser.runtime.sendMessage({
     });
 })
 
+chrome.runtime.onMessage.addListener(function(request, sender) {
+    if (request.type === 'toggle') {
+        const assessmentsVisible = store.state.assessments.isExpanded;
+        const assessmentsOpen = store.state.assessments.keepAssessmentsOpen;
+
+        if (!assessmentsVisible) {
+            store.dispatch('assessments/setKeepAssessmentsOpen', true)
+            .then(() => {
+                store.dispatch('assessments/setVisibility', true);
+            });
+        }
+        else if (assessmentsOpen) {
+            store.dispatch('assessments/setVisibility', false);
+        }
+
+        return true;
+    }
+});
+

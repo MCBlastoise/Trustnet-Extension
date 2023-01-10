@@ -179,8 +179,7 @@ export default {
             displayInfoSnackbar: false,
             infoSnackbarMessage: '',
             displayShareMenu: false,
-            displayUserAssessmentMenu: true,
-            keepAssessmentsOpen: false
+            displayUserAssessmentMenu: true
         }
     },
     created() {
@@ -248,6 +247,7 @@ export default {
         ...mapState('assessments', [
             'assessments',
             'isExpanded',
+            'keepAssessmentsOpen',
             'expanderIsDisplayed',
             'userAssessment'
         ]),
@@ -281,7 +281,7 @@ export default {
                 this.setVisibility(false);
             else {
                 this.setVisibility(true);
-                this.keepAssessmentsOpen = true;
+                this.setKeepAssessmentsOpen(true);
             }
                 
         },
@@ -344,7 +344,8 @@ export default {
         },
         ...mapActions('assessments', [
             'setVisibility',
-            'setExpanderVisibility'
+            'setExpanderVisibility',
+            'setKeepAssessmentsOpen'
         ]),
         ...mapActions('boosts', [
             'boostArticle'

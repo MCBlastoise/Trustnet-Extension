@@ -6,6 +6,13 @@ import sourceListServices from './services/sourceListServices'
 import postServices from './services/postServices'
 import studyServices from './services/studyServices'
 
+
+chrome.browserAction.onClicked.addListener(tab => {
+  
+  // Tell content script to toggle assessment visibility
+  chrome.tabs.sendMessage(tab.id, {type: "toggle"}, function(response) {});
+})
+
 browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('Hello from the background')
 

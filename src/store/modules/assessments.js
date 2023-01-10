@@ -6,7 +6,8 @@ export default {
     namespaced: true,
     state: {
         isExpanded: false,
-        expanderIsDisplayed: true,
+        expanderIsDisplayed: false,
+        keepAssessmentsOpen: false,
         assessments: {'confirmed': [], 'refuted': [], 'questioned': []},
         userAssessment: {},
         postOwnerAssessment: {},
@@ -94,6 +95,9 @@ export default {
         },
         set_expander_visibility(state, visibility) {
             state.expanderIsDisplayed = visibility;
+        },
+        set_keep_assessments_open(state, stay) {
+            state.keepAssessmentsOpen = stay;
         },
         clear_assessments(state) {
             state.assessments = {'confirmed': [], 'refuted': [], 'questioned': []};
@@ -383,6 +387,10 @@ export default {
         setExpanderVisibility: (context, payload) => {
             context.commit('set_expander_visibility', payload);
         },
+
+        setKeepAssessmentsOpen: (context, payload) => {
+            context.commit('set_keep_assessments_open', payload);
+        },
       
         setHistoryVisibility: (context, payload) => {
             context.commit('set_history_visibility', payload);
@@ -398,7 +406,7 @@ export default {
 
         clearAssessments: (context, payload) => {
             context.commit('clear_assessments', payload);
-        },
+        }
     }
   }
   
