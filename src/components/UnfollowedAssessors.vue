@@ -72,13 +72,13 @@ export default {
             }
         })
         .then(() => {
-            this.getPageAssessments({ usernames: [source.userName] });
+            this.getPageAssessmentsAndChangeIcon({ usernames: [source.userName] });
             this.removeUserFromUnfollowedAssessors(source.id);
             this.addSourceToFollows(source);
         })
     },
     ...mapActions('assessments', [
-        'getPageAssessments',
+        'getPageAssessmentsAndChangeIcon',
         'removeUserFromUnfollowedAssessors'
     ]),
     ...mapActions('relatedSources', [

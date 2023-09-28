@@ -205,21 +205,23 @@ export default {
 
         },
         containerBackgroundColor: function() {
-            
+            let bgColor;
             if (Object.entries(this.userAssessment).length && this.userAssessment.postCredibility != constants.ACCURACY_CODES.QUESTIONED) {
                 if (this.userAssessment.postCredibility == constants.ACCURACY_CODES.CONFIRMED)
-                    return 'green lighten-5';
+                    bgColor = 'green lighten-5';
                 else //if (this.userAssessment.postCredibility == constants.ACCURACY_CODES.REFUTED)
-                    return 'red lighten-5';
+                    bgColor = 'red lighten-5';
             }
             else if (this.isConfirmed)
-                return 'green lighten-5';
+                bgColor = 'green lighten-5';
             else if (this.isRefuted)
-                return 'red lighten-5';
+                bgColor = 'red lighten-5';
             else if (this.isDebated)
-                return 'orange lighten-5';
+                bgColor = 'orange lighten-5';
             else
-                return 'blue-grey lighten-5';
+                bgColor = 'blue-grey lighten-5';
+            
+            return bgColor;
         },
         isAssessmentNonEmpty: function() {
             return Object.values(this.assessments).flat().length;
@@ -277,6 +279,8 @@ export default {
             return this.getAssessmentsSlice(key).length < this.assessments[key].length;
         },
         toggleAssessments: function() {
+            console.log(this.assessments);
+            
             if (this.assessmentsPaneIsExpanded)
                 this.setVisibility(false);
             else {
@@ -290,7 +294,7 @@ export default {
             if (this.isExpanded & !this.keepAssessmentsOpen)
                 window.setTimeout(() => {
                     self.setVisibility(false);
-                }, 3000)
+                }, 4000)
         },
         getSelectedUsernamesAndLists: function() {
 

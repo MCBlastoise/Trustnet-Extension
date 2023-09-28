@@ -34,7 +34,7 @@ export default {
         this.fetchPageAndUserCharacteristics()
         .then(() => {
           if (!this.isBlacklisted) {
-            this.getPageAssessments();
+            this.getPageAssessmentsAndChangeIcon();
             this.getUnfollowedAssessors();
             this.setupLinkAssessments();
           }
@@ -59,7 +59,7 @@ export default {
       'logout'
     ]),
     ...mapActions('assessments', [
-      'getPageAssessments',
+      'getPageAssessmentsAndChangeIcon',
       'getUnfollowedAssessors'
     ]),
     ...mapActions('linkAssessments', [

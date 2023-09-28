@@ -171,6 +171,8 @@ export default {
                         sanitizedUrl = sanitizedUrl.substring(1, sanitizedUrl.length)
                     if (sanitizedUrl.substring(0, 5) == '//www')
                         sanitizedUrl = window.location.protocol + sanitizedUrl;
+                    if (sanitizedUrl.substring(0, 2) == '//')
+                        sanitizedUrl = window.location.protocol + sanitizedUrl;
                     if (sanitizedUrl[0] == '/' || sanitizedUrl[0] == '?')
                         sanitizedUrl = window.location.protocol + '//' + window.location.host + sanitizedUrl;
                     if (sanitizedUrl[0] == '#')

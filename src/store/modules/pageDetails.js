@@ -30,13 +30,22 @@ export default {
         let lastUrl = window.location.href; 
         new MutationObserver(() => {
           const url = window.location.href;
+
+          // console.log("\n\n\n\n\n\n\n\n\n");
+          // console.log(lastUrl);
+          // console.log(url)
+
           if (url !== lastUrl) {
             lastUrl = url;
+            // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBingo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             onUrlChange();
           }
         }).observe(document, { subtree: true, childList: true });
         
         function onUrlChange() {
+          
+          console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\nURL changed\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
           context.dispatch('setUpPageUrl')
           .then(() => {
             console.log('url has changed', context.state.url)
@@ -49,7 +58,7 @@ export default {
               
               context.dispatch('assessments/clearAssessments', true, { root: true })
               .then(() => {
-                context.dispatch('assessments/getPageAssessments', true, { root: true })
+                context.dispatch('assessments/getPageAssessmentsAndChangeIcon', true, { root: true })
                 .then(() => {
                   // context.dispatch('assessments/setExpanderVisibility', true, { root: true })
                   // context.dispatch('assessments/setVisibility', true, { root: true })

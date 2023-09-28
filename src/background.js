@@ -7,11 +7,17 @@ import postServices from './services/postServices'
 import studyServices from './services/studyServices'
 
 
+function changeActionIcon(iconSet) {
+  chrome.browserAction.setIcon({path: iconSet});
+}
+
 chrome.browserAction.onClicked.addListener(tab => {
-  
-  // Tell content script to toggle assessment visibility
-  chrome.tabs.sendMessage(tab.id, {type: "toggle"}, function(response) {});
+  chrome.tabs.sendMessage(tab.id, {type: "toggle"}, function(response) {}); // Tell content script to toggle assessment visibility
 })
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  chrome.tabs.sendMessage(activeInfo.tabId, {type: "change_icon"}, function(response) {}); // Update icon on tab switch
+});
 
 browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('Hello from the background')
@@ -146,7 +152,8 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     return new Promise((resolve, reject) => {
       assessmentServices.getAssessmentsAndQuestionsFromStrangers(request.data.headers)
       .then(res => {
-        resolve(res.data);
+        console.log(res.data)
+        .then(() => {resolve(res.data);})
       })
       .catch(err => {
         reject({ message: err });
@@ -245,6 +252,12 @@ browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   else if (request.type == 'new_tab') {
     console.log(request.data.url)
     chrome.tabs.create({ url: request.data.url });
+  }
+  else if (request.type == 'change_icon') {
+    const iconSet = request.data.iconSet;
+    changeActionIcon(iconSet);
+
+    return true;
   }
 
 })

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import sourceServices from '@/services/sourceServices'
 import utils from '@/services/utils'
+import constants from '../../lib/constants'
 
 export default {
     namespaced: true,
@@ -133,7 +134,17 @@ export default {
 
         getUnfollowedAssessors: (context) => {
             return new Promise((resolve, reject) => {
+                // console.log("Yeet");
+                // resolve(1);
+                // resolve();
                 let pageUrl = context.rootState.pageDetails.url;
+
+                // resolve();
+
+                // console.log(JSON.stringify([utils.extractHostname(pageUrl)]))
+                // .then(() => resolve());
+
+                // resolve();
 
                 browser.runtime.sendMessage({
                     type: 'get_unfollowed_assessors',
@@ -143,6 +154,11 @@ export default {
                         }
                     }
                 })
+                .catch((err) => {
+                    // console.log("Yeet")
+                    reject(err);
+                })
+                // (async () => {console.log("Yeet"); return []})()
                 .then((assessors) => {
                     if (assessors.length) {
                         context.commit('set_unfollowed_assessors_on_page', assessors);
@@ -154,10 +170,12 @@ export default {
                             })
                         })
                     }
+                    // resolve();
                 })
-                .catch((err) => {
-                    reject(err);
-                })
+                // .catch((err) => {
+                //     // console.log("Yeet")
+                //     reject(err);
+                // })
             })
         }, 
 
@@ -166,6 +184,9 @@ export default {
         from or from specified usernames.
         */
         getPageAssessments: (context, payload) => {
+            
+            // console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\nObtained\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            
             return new Promise((resolve, reject) => {
             
                 let pageUrl = context.rootState.pageDetails.url;
@@ -236,8 +257,8 @@ export default {
                             context.dispatch('sortAssessments', restructuredAssessments)
                             .then((sortedAssessments) => {
                                 console.log('what are sorted assessments', sortedAssessments)
-                                context.commit('set_assessments', sortedAssessments);    
-    
+                                context.commit('set_assessments', sortedAssessments);
+
                                 if (context.rootGetters['assessments/isNoSourceAssessmentNonEmpty'])
                                     context.commit('set_visibility', true);
     
@@ -374,6 +395,68 @@ export default {
                     resolve();
                 })
             })
+        },
+
+        changeIcon: (context, payload) => {
+            const Colors = Object.freeze({
+                Grey: Symbol("grey"),
+                Red: Symbol("red"),
+                Orange: Symbol("orange"),
+                Green: Symbol("green")
+            })
+
+            const userAssessment = context.state.userAssessment;
+            
+            let color;
+            if (Object.entries(userAssessment).length && userAssessment.postCredibility != constants.ACCURACY_CODES.QUESTIONED) {
+                if (userAssessment.postCredibility == constants.ACCURACY_CODES.CONFIRMED)
+                    color = Colors.Green;
+                else //if (this.userAssessment.postCredibility == constants.ACCURACY_CODES.REFUTED)
+                    color = Colors.Red;
+            }
+            else if (context.getters.isConfirmed)
+                color = Colors.Green;
+            else if (context.getters.isRefuted)
+                color = Colors.Red;
+            else if (context.getters.isDebated)
+                color = Colors.Orange;
+            else
+                color = Colors.Grey;
+            
+            const colorToIconMap = {
+                [Colors.Grey]: {
+                    "19": "icons/trustnet_67.png",
+                    "38": "icons/trustnet_80.png"
+                },
+                [Colors.Red]: {
+                    "19": "icons/trustnet_red_67.png",
+                    "38": "icons/trustnet_red_80.png"
+                },
+                [Colors.Orange]: {
+                    "19": "icons/trustnet_orange_67.png",
+                    "38": "icons/trustnet_orange_80.png"
+                },
+                [Colors.Green]: {
+                    "19": "icons/trustnet_green_67.png",
+                    "38": "icons/trustnet_green_80.png"
+                }
+            }
+
+            const iconSet = colorToIconMap[color];
+            browser.runtime.sendMessage({
+                type: 'change_icon',
+                data: {
+                    "iconSet": iconSet
+                }
+            });
+        },
+
+        getPageAssessmentsAndChangeIcon: (context, payload) => {
+            context.dispatch('getPageAssessments', payload)
+            .then(() => {
+                if (!document.hidden)
+                    context.dispatch('changeIcon');
+            });
         },
 
         removeUserFromUnfollowedAssessors: (context, payload) => {

@@ -40,8 +40,11 @@ browser.runtime.sendMessage({
     });
 })
 
-chrome.runtime.onMessage.addListener(function(request, sender) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log(request);
     if (request.type === 'toggle') {
+        // console.log(store.state.assessments.assessments);
+        
         const assessmentsVisible = store.state.assessments.isExpanded;
         const assessmentsOpen = store.state.assessments.keepAssessmentsOpen;
 
@@ -56,6 +59,12 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
         }
 
         return true;
+    }
+    else if (request.type === 'change_icon') {
+        if (!document.hidden) {
+            store.dispatch('assessments/changeIcon');
+            return true;
+        }
     }
 });
 
